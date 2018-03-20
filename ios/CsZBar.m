@@ -144,6 +144,7 @@
     return;
 }
 
+
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info {
     if ([self.scanReader isBeingDismissed]) {
         return;
@@ -153,13 +154,16 @@
     
     ZBarSymbol *symbol = nil;
     for (symbol in results) break; // get the first result
+        if ([[NSScanner scannerWithString:symbol.data] scanFloat:NULL]) {
+            [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
+                self.scanInProgress = NO;
+                [self sendScanResult: [CDVPluginResult
+                                    resultWithStatus: CDVCommandStatus_OK
+                                    messageAsString: symbol.data]];
 
-    [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
-        self.scanInProgress = NO;
-        [self sendScanResult: [CDVPluginResult
-                               resultWithStatus: CDVCommandStatus_OK
-                               messageAsString: symbol.data]];
-    }];
+        }];
+    }
+
 }
 
 - (void) imagePickerControllerDidCancel:(UIImagePickerController*)picker {
