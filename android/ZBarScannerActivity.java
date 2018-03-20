@@ -410,15 +410,24 @@ implements SurfaceHolder.Callback {
                     qrValue = sym.getData();
 
                     // Return 1st found QR code value to the calling Activity.
-                    Intent result = new Intent ();
-                    result.putExtra(EXTRA_QRVALUE, qrValue);
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
+                    if(isNumeric(qrValue)) {
+                        Intent result = new Intent ();
+                        result.putExtra(EXTRA_QRVALUE, qrValue);
+                        setResult(Activity.RESULT_OK, result);
+                        finish();
+                    }
                 }
 
             }
         }
     };
+
+    private boolean isNumeric(String str) {
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) return false;
+        }
+        return true;
+    }
 
     // Misc ------------------------------------------------------------
 
